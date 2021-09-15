@@ -2,6 +2,7 @@ import flask
 import psycopg2
 from flask import request, jsonify
 from psycopg2.extras import RealDictCursor
+import datetime
 
 app = flask.Flask(__name__)
 app.config["DEBUG"]= True
@@ -19,7 +20,7 @@ def home():
 def list_tasks():
     cursor= connection.cursor(cursor_factory=RealDictCursor)
 
-    postgreSQL_fetch_query= "SELECT * FROM todo"
+    postgreSQL_fetch_query= "SELECT * FROM todo;"
 
     cursor.execute(postgreSQL_fetch_query)
 
@@ -51,5 +52,31 @@ def create_task():
     finally:
         if(cursor):
             cursor.close()
+
+@app.route('/api/tasks/<id>', methods=['PUT'])
+def update_task(id):
+    print('in complete task')
+    id= id
+    datetime.datetime.now()
+    timestamp=datetime.datetime.now()
+    print(timestamp)
+    try:
+        cursor=connection.cursor(cursor_factory=RealDictCursor)
+        print(id)
+        postgreSQL_update_query= "UPDATE todo SET completed=TRUE, date_completed = (%s) WHERE id=(%s);"
+        cursor.execute(postgreSQL_update_query, (timestamp, id,))
+        connection.commit()
+        count=cursor.rowcount
+        print(count, 'task updated')
+        result={'status':'updated'}
+        return jsonify(result), 201
+    except (Exception, psycopg2.Error) as error:
+        print('Failed to delete owner', error)
+        result = {'status': 'ERROR'}
+        return jsonify(result), 500
+    finally:
+        if(cursor):
+            cursor.close()   
+
 
 app.run()
