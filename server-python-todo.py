@@ -52,6 +52,27 @@ def create_task():
     finally:
         if(cursor):
             cursor.close()
+@app.route('/api/tasks/<id>', methods=['DELETE'])
+def delete_task(id):
+    print  ('in delete task')
+    id= id
+    try:
+        cursor=connection.cursor(cursor_factory=RealDictCursor)
+        print(id)
+        postgreSQL_delete_query= "DELETE FROM todo WHERE id=(%s)"
+        cursor.execute(postgreSQL_delete_query, (id,))
+        connection.commit()
+        count=cursor.rowcount
+        print(count, 'task deleted')
+        result={'status': 'deleted'}
+        return jsonify(result), 201
+    except (Exception, psycopg2.Error) as error:
+        print('Failed to delete task', error)
+        result={'status': 'ERROR'}
+        return jsonify(result), 500
+    finally:
+        if(cursor):
+            cursor.close()
 
 @app.route('/api/tasks/<id>', methods=['PUT'])
 def update_task(id):
@@ -71,7 +92,7 @@ def update_task(id):
         result={'status':'updated'}
         return jsonify(result), 201
     except (Exception, psycopg2.Error) as error:
-        print('Failed to delete owner', error)
+        print('Failed to update task', error)
         result = {'status': 'ERROR'}
         return jsonify(result), 500
     finally:
