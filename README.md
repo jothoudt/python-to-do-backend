@@ -5,6 +5,6 @@ This application is the python version of the backend for my to-do list applicat
 To get started:
 ---
 
-- create database/table from Database.sql
-- Type python3 server-python-todo.py to start the server
+- Create database/table from Database.sql
+- Type python3 server-python-todo.py in terminal to start the server
 - npm start on the front-end of this application at [front-end to-do](https://github.com/jothoudt/frontend-to-do)
