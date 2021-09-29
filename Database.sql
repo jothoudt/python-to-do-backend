@@ -1,4 +1,4 @@
-Database_Name= python_todo
+Database_Name "python_todo";
 
 CREATE TABLE "todo" (
 "id" SERIAL PRIMARY KEY,
